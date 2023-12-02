@@ -8,7 +8,7 @@ function ManageLayout({ children }: { children: React.ReactNode }) {
     <div>
       <TopBar />
 
-      <div className="w-full  max-w-5xl mx-auto bg-white genp rounded-md">
+      <div className="w-full  max-w-5xl mx-auto bg-white genp rounded-md min-h-[calc(100vh-150px)]">
         {children}
       </div>
 
