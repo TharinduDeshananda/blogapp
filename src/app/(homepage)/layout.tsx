@@ -1,7 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 import TopBar from "@/components/topBar/TopBar";
 import SearchBox from "@/components/searchcomponent/SearchBox";
 import Footer from "@/components/footer/Footer";
@@ -19,10 +19,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div>{children}</div>
-      </body>
-    </html>
+    <div>
+      <TopBar />
+      <div className="max-w-5xl mx-auto w-full">
+        <SearchBox />
+      </div>
+      <div className="w-full ">{children}</div>
+
+      <Footer />
+    </div>
   );
 }
