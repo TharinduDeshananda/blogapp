@@ -1,5 +1,6 @@
 "use client";
 import ArticleItem from "@/components/articleitem/ArticleItem";
+import ManageArticleItem from "@/components/articleitem/ManageArticleItem";
 import LoadingComp from "@/components/loadingcomp/LoadingComp";
 import PaginationComp from "@/components/paginationcomp/PaginationComp";
 import fetchArtciles from "@/controller/article/ArticleController";
@@ -51,10 +52,10 @@ function ManagePage() {
 
       {/* post filter result */}
       <PaginationComp currentPage={4} totalPages={20} />
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-y-5">
         {searchQuery.isSuccess &&
           searchQuery.data.map((i: string, index: number) => (
-            <ArticleItem key={index + i} />
+            <ManageArticleItem key={index + i} />
           ))}
       </div>
     </div>
