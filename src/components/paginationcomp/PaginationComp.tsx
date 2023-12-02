@@ -23,7 +23,9 @@ function PaginationComp({
           <button className="genbtn">{currentPage - 1}</button>
         )}
 
-        <button className="genbtn">{currentPage}</button>
+        <button className="cursor-not-allowed genbtn bg-white text-blue-500 border border-blue-500 hover:text-white hover:bg-blue-500">
+          {currentPage}
+        </button>
         {currentPage + 1 <= totalPages && (
           <button className="genbtn">{currentPage + 1}</button>
         )}
