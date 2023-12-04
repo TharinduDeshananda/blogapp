@@ -32,11 +32,14 @@ function NewArticlePage() {
           }}
           initialValue="<h1>Hello World</h1>"
         />
-        <button className="genbtn" onClick={getContent}>
-          Submit
+        <button className="genbtn my-2" onClick={getContent}>
+          Create Article
         </button>
         {/* resource upload controls */}
         <div className="w-full my-2 border rounded-lg genp">
+          <h1 className="text-base md:text-lg font-bold text-gray-500">
+            Resouces
+          </h1>
           <h1 className="text-xs sm:text-sm ">
             Resource to be used in the Article. Upload them and use their url by
             clicking on the resource below.{" "}
@@ -95,7 +98,6 @@ function NewArticlePage() {
                 <input
                   type="file"
                   accept="image/*"
-                  multiple
                   name="resourceFile"
                   onChange={(e) => {
                     const files = [];
