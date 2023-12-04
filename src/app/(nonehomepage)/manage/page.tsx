@@ -4,6 +4,7 @@ import ManageArticleItem from "@/components/articleitem/ManageArticleItem";
 import LoadingComp from "@/components/loadingcomp/LoadingComp";
 import PaginationComp from "@/components/paginationcomp/PaginationComp";
 import fetchArtciles from "@/controller/article/ArticleController";
+import Link from "next/link";
 import React, { useState } from "react";
 import { useQuery, useIsFetching } from "react-query";
 import { json } from "stream/consumers";
@@ -31,9 +32,13 @@ function ManagePage() {
   return (
     <div className="w-full">
       {isFetching > 0 && <LoadingComp />}
-      <button className="genbtn text-xs lg:text-base">
-        Create New Article
-      </button>
+
+      <Link href={"/manage/new-article"}>
+        <button className="genbtn text-xs lg:text-base">
+          Create New Article
+        </button>
+      </Link>
+
       {/* post filter */}
       <div className="w-full flex justify-center">
         <input

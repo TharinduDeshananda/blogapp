@@ -9,7 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tinymce/tinymce-react": "^4.3.2",
+    "@uidotdev/usehooks": "^2.4.1",
+    "aws-sdk": "^2.1510.0",
+    "formik": "^2.4.5",
     "next": "14.0.2",
+    "next-connect": "^1.0.0-next.4",
     "node": "^21.2.0",
     "react": "^18",
     "react-dom": "^18",
