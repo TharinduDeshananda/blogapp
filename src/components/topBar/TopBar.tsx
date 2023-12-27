@@ -12,7 +12,7 @@ function TopBar() {
         <Link href="/manage">Manage</Link>
         <Link href="#">About</Link>
         <Link href="#">About</Link>
-        <Link href="#">About</Link>
+        <Link href="/login">Login</Link>
       </div>
     </div>
   );

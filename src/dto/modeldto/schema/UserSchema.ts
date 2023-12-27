@@ -7,6 +7,7 @@ const userSchema = new Schema<UserModelDto>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   articles: [{ type: mongoose.Types.ObjectId, ref: "Article" }],
+  profileImgUrl: String,
 });
 
 export default function getUserModel() {
