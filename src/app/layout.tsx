@@ -6,6 +6,7 @@ import TopBar from "@/components/topBar/TopBar";
 import SearchBox from "@/components/searchcomponent/SearchBox";
 import Footer from "@/components/footer/Footer";
 import QueryClientWrapper from "@/util/QueryClientWrapper";
+import UserContextWrapper from "@/lib/UserContextWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <QueryClientWrapper>
-          <div>{children}</div>
+          <UserContextWrapper>
+            <div>{children}</div>
+          </UserContextWrapper>
         </QueryClientWrapper>
       </body>
     </html>

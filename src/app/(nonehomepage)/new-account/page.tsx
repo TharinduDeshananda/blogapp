@@ -1,13 +1,31 @@
 "use client";
 import Avatar from "@/components/avatar/Avatar";
-import React, { useState } from "react";
+import LoadingComp from "@/components/loadingcomp/LoadingComp";
+import { createUserMutation } from "@/controller/user/UserQueries";
+import UserRole from "@/enum/UserRole";
+import UserContext, { UserAction } from "@/lib/UserContext";
+import { useRouter } from "next/navigation";
+import React, { useContext, useState } from "react";
+import { useMutation } from "react-query";
+import { toast } from "react-toastify";
 
 function NewAccountPage() {
+  const [state, dispatch] = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userProfileImage, setUserProfileImage] = useState<File | null>(null);
   const [profileImgUrl, setProfileImgUrl] = useState<string | null>(null);
+  const router = useRouter();
+  const userCreateMuTation = useMutation({
+    mutationFn: createUserMutation,
+    onSuccess: (data) => {
+      console.log("use creation success");
+      toast.success("User creation success");
+      setTimeout(() => router.replace("/login"), 2000);
+    },
+  });
+
   const handleCreateAccount = () => {
     // Implement create account logic here
     console.log("Create account clicked");
@@ -15,6 +33,14 @@ function NewAccountPage() {
     console.log("Email:", email);
     console.log("Password:", password);
     console.log("UserProfileImage:", userProfileImage);
+
+    userCreateMuTation.mutate({
+      password,
+      email,
+      profileImgUrl: profileImgUrl ?? "",
+      userName: username,
+      role: UserRole.USER,
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +56,12 @@ function NewAccountPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
+      {userCreateMuTation.isLoading && <LoadingComp />}
+      {userCreateMuTation.isError && (
+        <div className="bg-red-100 rounded-lg text-red-500 text-xs genp text-center">
+          {userCreateMuTation.error as string}
+        </div>
+      )}
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
