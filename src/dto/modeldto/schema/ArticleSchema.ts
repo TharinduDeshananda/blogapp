@@ -5,6 +5,7 @@ const articleSchema = new Schema<ArticleModelDto>({
   content: { type: String, required: true },
   resources: [{ type: mongoose.Types.ObjectId, ref: "Resource" }],
   title: { type: String, required: true },
+  published: { type: Boolean, default: false },
 });
 
 export default function getArticleModel() {

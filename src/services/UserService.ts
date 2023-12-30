@@ -1,4 +1,5 @@
 import UserModelDto from "@/dto/modeldto/UserModelDto";
+import { getUserRoleEnumFromString } from "@/enum/UserRole";
 import db from "@/lib/db";
 import { hashPassword } from "@/util/passwordUtil";
 import { Document } from "mongoose";
@@ -6,6 +7,7 @@ import { Document } from "mongoose";
 export async function createUser(dto: UserModelDto) {
   try {
     console.log("Method createUser start");
+    if (dto.password) dto.password = await hashPassword(dto.password);
     const savedUser: Document<UserModelDto> = await db.UserEntity.create(dto);
     console.log("Method createUser success");
     return <UserModelDto>{
@@ -44,5 +46,25 @@ export async function updateUser(dto: UserModelDto): Promise<UserModelDto> {
     throw error;
   }
 }
-export async function getUser() {}
+export async function getUser(email?: string): Promise<UserModelDto> {
+  try {
+    console.log("method getUser start");
+    const user: Document<UserModelDto> | null = await db.UserEntity.findOne({
+      email,
+    });
+    if (!user) throw new Error("User not found");
+    console.log("method getUser success");
+    return {
+      email: user?.get("email"),
+      userName: user?.get("userName"),
+      password: user?.get("password"),
+      profileImgUrl: user?.get("profileImgUrl"),
+      role: getUserRoleEnumFromString(user?.get("role")) ?? undefined,
+      id: user?.id,
+    };
+  } catch (error) {
+    console.error("Method getUser failed: ", error);
+    throw error;
+  }
+}
 export async function filterUsers() {}

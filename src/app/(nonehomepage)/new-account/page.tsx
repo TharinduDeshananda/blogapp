@@ -1,4 +1,5 @@
 "use client";
+import { UserCreateType } from "@/app/api/user/route";
 import Avatar from "@/components/avatar/Avatar";
 import LoadingComp from "@/components/loadingcomp/LoadingComp";
 import { createUserMutation } from "@/controller/user/UserQueries";
@@ -19,7 +20,7 @@ function NewAccountPage() {
   const router = useRouter();
   const userCreateMuTation = useMutation({
     mutationFn: createUserMutation,
-    onSuccess: (data) => {
+    onSuccess: () => {
       console.log("use creation success");
       toast.success("User creation success");
       setTimeout(() => router.replace("/login"), 2000);
@@ -27,20 +28,18 @@ function NewAccountPage() {
   });
 
   const handleCreateAccount = () => {
-    // Implement create account logic here
-    console.log("Create account clicked");
-    console.log("Username:", username);
-    console.log("Email:", email);
-    console.log("Password:", password);
-    console.log("UserProfileImage:", userProfileImage);
-
-    userCreateMuTation.mutate({
+    const mutationParams: UserCreateType = {
       password,
       email,
-      profileImgUrl: profileImgUrl ?? "",
       userName: username,
       role: UserRole.USER,
-    });
+    };
+
+    if (userProfileImage !== null) {
+      mutationParams.userProfileImgFile = userProfileImage;
+    }
+
+    userCreateMuTation.mutate(mutationParams);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,11 +54,11 @@ function NewAccountPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
+    <div className="min-h-screen flex items-center justify-center bg-white flex-col">
       {userCreateMuTation.isLoading && <LoadingComp />}
       {userCreateMuTation.isError && (
         <div className="bg-red-100 rounded-lg text-red-500 text-xs genp text-center">
-          {userCreateMuTation.error as string}
+          {(userCreateMuTation?.error as Error).message}
         </div>
       )}
       <div className="max-w-md w-full space-y-8">
@@ -72,7 +71,13 @@ function NewAccountPage() {
           </div>
         </div>
 
-        <form className="mt-8 space-y-6">
+        <form
+          className="mt-8 space-y-6"
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="username" className="sr-only">

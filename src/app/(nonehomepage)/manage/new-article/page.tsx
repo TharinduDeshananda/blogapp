@@ -8,6 +8,7 @@ function NewArticlePage() {
   const editorRef = useRef<any>(null);
   const [showUploadBox, setShowUploadBox] = useState(false);
   const [formState, setFormState] = useState<File[] | null>(null);
+  const [articleStarted, setArticleStarted] = useState(false);
 
   const getContent = () => {
     const content = editorRef.current.getContent();
@@ -16,52 +17,68 @@ function NewArticlePage() {
   return (
     <>
       <div className="w-full">
-        <h1 className="text-sm text-gray-500 font-bold md:text-base my-2">
-          Create, Edit your Article
-        </h1>
-        <Editor
-          onInit={(evt, editor) => {
-            editorRef.current = editor;
-          }}
-          apiKey="h9xmqbsx9xe07lq33hozbfxlw0oep3tfbuu0w0cp1drrf31x"
-          init={{
-            plugins:
-              "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount",
-            toolbar:
-              "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
-          }}
-          initialValue="<h1>Hello World</h1>"
-        />
-        <button className="genbtn my-2" onClick={getContent}>
-          Create Article
-        </button>
-        {/* resource upload controls */}
-        <div className="w-full my-2 border rounded-lg genp">
-          <h1 className="text-base md:text-lg font-bold text-gray-500">
-            Resouces
-          </h1>
-          <h1 className="text-xs sm:text-sm ">
-            Resource to be used in the Article. Upload them and use their url by
-            clicking on the resource below.{" "}
-          </h1>
-          <button className="genbtn" onClick={() => setShowUploadBox(true)}>
-            Upload Resource
-          </button>
-          <div className="flex flex-row max-w-full gap-x-3 overflow-x-auto mt-5">
-            <ArticleResource />
-            <ArticleResource />
-            <ArticleResource />
-            <ArticleResource />
-            <ArticleResource />
-            <ArticleResource />
-            <ArticleResource />
-            <ArticleResource />
-            <ArticleResource />
-            <ArticleResource />
-            <ArticleResource />
-            <ArticleResource />
+        <div className="w-full flex flex-col">
+          <h5 className="text-sm">Start article by giving a title</h5>
+          <div className="flex flex-wrap gap-5 w-full items-center justify-center md:justify-start">
+            <input
+              type="text"
+              placeholder="title"
+              className="geninput text-sm flex-1 max-w-xl min-w-[320px]"
+            />
+            <button className="genbtn text-xs">Start Article</button>
           </div>
         </div>
+
+        {articleStarted && (
+          <>
+            <h1 className="text-sm text-gray-500 font-bold md:text-base my-2">
+              Create, Edit your Article
+            </h1>
+            <Editor
+              onInit={(evt, editor) => {
+                editorRef.current = editor;
+              }}
+              apiKey="h9xmqbsx9xe07lq33hozbfxlw0oep3tfbuu0w0cp1drrf31x"
+              init={{
+                plugins:
+                  "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount",
+                toolbar:
+                  "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
+              }}
+              initialValue="<h1>Hello World</h1>"
+            />
+            <button className="genbtn my-2" onClick={getContent}>
+              Create Article
+            </button>
+            {/* resource upload controls */}
+            <div className="w-full my-2 border rounded-lg genp">
+              <h1 className="text-base md:text-lg font-bold text-gray-500">
+                Resouces
+              </h1>
+              <h1 className="text-xs sm:text-sm ">
+                Resource to be used in the Article. Upload them and use their
+                url by clicking on the resource below.{" "}
+              </h1>
+              <button className="genbtn" onClick={() => setShowUploadBox(true)}>
+                Upload Resource
+              </button>
+              <div className="flex flex-row max-w-full gap-x-3 overflow-x-auto mt-5">
+                <ArticleResource />
+                <ArticleResource />
+                <ArticleResource />
+                <ArticleResource />
+                <ArticleResource />
+                <ArticleResource />
+                <ArticleResource />
+                <ArticleResource />
+                <ArticleResource />
+                <ArticleResource />
+                <ArticleResource />
+                <ArticleResource />
+              </div>
+            </div>
+          </>
+        )}
       </div>
       {showUploadBox && (
         <Modal

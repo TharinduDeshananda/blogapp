@@ -7,6 +7,8 @@ import SearchBox from "@/components/searchcomponent/SearchBox";
 import Footer from "@/components/footer/Footer";
 import QueryClientWrapper from "@/util/QueryClientWrapper";
 import UserContextWrapper from "@/lib/UserContextWrapper";
+import ToastifyWrapper from "@/util/ToastifyWrapper";
+import UserSessionWrapper from "@/lib/UserSessionWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,11 +25,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <QueryClientWrapper>
-          <UserContextWrapper>
-            <div>{children}</div>
-          </UserContextWrapper>
-        </QueryClientWrapper>
+        <UserSessionWrapper>
+          <QueryClientWrapper>
+            <UserContextWrapper>
+              <ToastifyWrapper>
+                <div>{children}</div>
+              </ToastifyWrapper>
+            </UserContextWrapper>
+          </QueryClientWrapper>
+        </UserSessionWrapper>
       </body>
     </html>
   );

@@ -26,5 +26,6 @@ export async function uploadFileToS3(file: File, fileName: string) {
     return result;
   } catch (e: any) {
     console.error("uploadFileToS3 failed: " + e);
+    throw e;
   }
 }

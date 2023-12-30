@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: [
+      "myblogpicbucket.s3.amazonaws.com",
+      "myblogpicbucket.s3.ap-south-1.amazonaws.com",
+    ],
+  },
   async headers() {
     return [
       {
