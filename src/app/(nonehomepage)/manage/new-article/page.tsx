@@ -3,12 +3,53 @@ import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import ArticleResource from "@/components/articleresource/ArticleResource";
 import Modal from "@/util/modal/Modal";
+import { useIsFetching, useMutation } from "react-query";
+import {
+  startArticle,
+  updateArticle,
+} from "@/controller/article/ArticleController";
+import { toast } from "react-toastify";
+import LoadingComp from "@/components/loadingcomp/LoadingComp";
+import { title } from "process";
 
 function NewArticlePage() {
+  const isFetching = useIsFetching();
   const editorRef = useRef<any>(null);
   const [showUploadBox, setShowUploadBox] = useState(false);
   const [formState, setFormState] = useState<File[] | null>(null);
   const [articleStarted, setArticleStarted] = useState(false);
+  const [articleId, setArticleId] = useState<string>("");
+  const [articleTitle, setArticleTitle] = useState("");
+
+  const articleStartMutation = useMutation({
+    mutationFn: startArticle,
+    onSuccess: (data) => {
+      if (articleStarted) {
+        toast.success("Title update scuccess");
+        setArticleTitle(data.title);
+        return;
+      }
+      setArticleId(data.id);
+      toast.success("Article start scuccess");
+      setArticleStarted(true);
+    },
+    onError: (e: Error) => {
+      toast.error(e.message);
+      console.log(e);
+    },
+  });
+
+  const articleUpdateMutation = useMutation({
+    mutationFn: updateArticle,
+    onSuccess: (data) => {
+      toast.success("Article update scuccess");
+      setArticleTitle(data.title);
+    },
+    onError: (e: Error) => {
+      toast.error(e.message);
+      console.log(e);
+    },
+  });
 
   const getContent = () => {
     const content = editorRef.current.getContent();
@@ -18,14 +59,42 @@ function NewArticlePage() {
     <>
       <div className="w-full">
         <div className="w-full flex flex-col">
+          {(articleStartMutation.isLoading ||
+            articleUpdateMutation.isLoading) && <LoadingComp />}
           <h5 className="text-sm">Start article by giving a title</h5>
           <div className="flex flex-wrap gap-5 w-full items-center justify-center md:justify-start">
             <input
               type="text"
               placeholder="title"
               className="geninput text-sm flex-1 max-w-xl min-w-[320px]"
+              value={articleTitle}
+              onChange={(e) => setArticleTitle(e.target.value)}
             />
-            <button className="genbtn text-xs">Start Article</button>
+            {!articleStarted && (
+              <button
+                className="genbtn text-xs"
+                disabled={articleStartMutation.isLoading}
+                onClick={() => {
+                  articleStartMutation.mutate(articleTitle);
+                }}
+              >
+                Start Article
+              </button>
+            )}
+            {articleStarted && (
+              <button
+                disabled={articleStartMutation.isLoading}
+                className="genbtn text-xs"
+                onClick={() => {
+                  articleUpdateMutation.mutate({
+                    title: articleTitle,
+                    id: articleId,
+                  });
+                }}
+              >
+                Update title
+              </button>
+            )}
           </div>
         </div>
 

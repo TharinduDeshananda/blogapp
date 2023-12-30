@@ -1,3 +1,5 @@
+import ArticleModelDto from "@/dto/modeldto/ArticleModelDto";
+
 export default async function fetchArtciles({ title }: ArticleQueryDto) {
   const response = await fetch("/api/article", { method: "GET" });
   const body = await response.json();
@@ -10,14 +12,35 @@ export type ArticleQueryDto = {
 };
 
 export async function startArticle(title: string) {
-  const formData = new FormData();
-  formData.set("title", title);
-  const response = await fetch("/api/article", {
-    method: "POST",
-    body: formData,
-  });
-  const body = await response.json();
+  try {
+    const formData = new FormData();
+    formData.set("title", title);
+    const response = await fetch("/api/article", {
+      method: "POST",
+      body: formData,
+    });
+    const body = await response.json();
 
-  if (body.status !== 0) throw new Error(body.statusMessage);
-  return body.body;
+    if (body.status !== 0) throw new Error(body.statusMessage);
+    return body.body;
+  } catch (error) {
+    console.log("Article start failed");
+    throw error;
+  }
+}
+
+export async function updateArticle(dto: ArticleModelDto) {
+  try {
+    const response = await fetch("/api/article", {
+      method: "PATCH",
+      body: JSON.stringify(dto),
+    });
+    const body = await response.json();
+
+    if (body.status !== 0) throw new Error(body.statusMessage);
+    return body.body;
+  } catch (error) {
+    console.log("Article update failed: ", error);
+    throw error;
+  }
 }
