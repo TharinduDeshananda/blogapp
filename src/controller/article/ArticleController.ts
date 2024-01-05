@@ -48,6 +48,7 @@ export async function updateArticle(dto: ArticleModelDto) {
     const body = await response.json();
 
     if (body.status !== 0) throw new Error(body.statusMessage);
+
     return body.body;
   } catch (error) {
     console.log("Article update failed: ", error);

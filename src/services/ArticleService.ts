@@ -160,6 +160,7 @@ export async function updateArticle(
   dto: ArticleModelDto
 ): Promise<ArticleModelDto> {
   try {
+    console.log(dto);
     const session = await getServerSession(authOptions);
     if (!session) throw new Error("Unauthorized");
 
@@ -179,7 +180,8 @@ export async function updateArticle(
 
     if (dto.title) article.set("title", dto.title);
     if (dto.content) article.set("content", dto.content);
-    if (dto.published) article.set("published", dto.published);
+    if (dto.published !== undefined || dto.published !== null)
+      article.set("published", dto.published === true);
 
     if (dto.titleImage) article.set("titleImage", dto.titleImage);
 
@@ -188,10 +190,32 @@ export async function updateArticle(
       title: article.get("title"),
       id: article.id,
       content: article.get("content"),
-      published: article.get("published"),
+      published: article.get("published") === true,
     };
   } catch (e) {
     console.log("method update article failed: ", e);
     throw e;
+  }
+}
+
+export async function getOwnArticle(id: string) {
+  try {
+    console.log("method getOwnArticle started");
+    const session = await getServerSession(authOptions);
+    if (!session) throw new Error("Need to be authenticated");
+    const user = session.user;
+
+    const article: ArticleModelDto | null = (await db.ArticleEntity.findById(
+      id
+    ).populate("author")) as ArticleModelDto | null;
+    if (!article) throw new Error("Article not found");
+    const authorEmail = article.author?.email;
+    if (user.email !== authorEmail) throw new Error("User not the author");
+
+    return article;
+    console.log("method getOwnArticle success");
+  } catch (error) {
+    console.log("methods getOwnArticle Failed: ", error);
+    throw error;
   }
 }

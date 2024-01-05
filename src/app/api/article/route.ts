@@ -3,6 +3,7 @@ import ArticleModelDto from "@/dto/modeldto/ArticleModelDto";
 import {
   ArticleFilterType,
   getArticle,
+  removeArticle,
   startArticle,
   updateArticle,
 } from "@/services/ArticleService";
@@ -80,6 +81,22 @@ export async function PUT(request: NextRequest) {
     console.error("Article start failed: ", e);
     return NextResponse.json(
       new CommonResponse(1, (e as any as Error).message, e)
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const id = request.nextUrl.searchParams.get("id");
+    if (!id) throw new Error("Article id is required");
+    await removeArticle(id);
+    return NextResponse.json(
+      new CommonResponse(0, "Remove article success", null)
+    );
+  } catch (e) {
+    console.log(e);
+    return NextResponse.json(
+      new CommonResponse(1, "Remove article failed", null)
     );
   }
 }

@@ -1,9 +1,9 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import ArticleResource from "@/components/articleresource/ArticleResource";
 import Modal from "@/util/modal/Modal";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import {
   startArticle,
   updateArticle,
@@ -12,8 +12,13 @@ import {
 import { toast } from "react-toastify";
 import LoadingComp from "@/components/loadingcomp/LoadingComp";
 import Image from "next/image";
+import { useParams } from "next/navigation";
+import ArticleModelDto from "@/dto/modeldto/ArticleModelDto";
+import Link from "next/link";
 
-function NewArticlePage() {
+function ManageArticlePage() {
+  const params = useParams();
+
   const editorRef = useRef<any>(null);
   const [showUploadBox, setShowUploadBox] = useState(false);
   const [formState, setFormState] = useState<File[] | null>(null);
@@ -24,16 +29,38 @@ function NewArticlePage() {
   const [titleImgFile, setTitleImgFile] = useState<File | null>(null);
   const [articleState, setArticleState] = useState(false);
   const [titleImgChanged, setTitleImgChanged] = useState(false);
+  const [content, setContent] = useState<string>("");
+
+  const articleQuery = useQuery({
+    queryKey: ["article", params?.["id"]],
+    queryFn: async ({ queryKey }) => {
+      const id = queryKey[1];
+
+      const response = await fetch("/api/article/own/" + id);
+      const body = await response.json();
+      if (body.status !== 0) throw new Error("Article fetch failed");
+      return body.body;
+    },
+    onSuccess: (data) => {
+      setArticleId(data._id);
+      setArticleState((data as ArticleModelDto).published ?? false);
+      setArticleTitle((data as ArticleModelDto).title ?? "");
+      setTitleImg((data as ArticleModelDto).titleImage ?? "");
+      setArticleStarted(true);
+      setContent((data as ArticleModelDto).content ?? "");
+    },
+  });
+
   const articleStartMutation = useMutation({
     mutationFn: startArticle,
     onSuccess: (data) => {
       if (articleStarted) {
-        toast.success("Title update scuccess");
+        toast.success("Title update success");
         setArticleTitle(data.title);
         return;
       }
       setArticleId(data.id);
-      toast.success("Article start scuccess");
+      toast.success("Article start success");
       setArticleStarted(true);
       setArticleState(false);
     },
@@ -46,7 +73,9 @@ function NewArticlePage() {
   const articleUpdateMutation = useMutation({
     mutationFn: updateArticle,
     onSuccess: (data) => {
-      toast.success("Article update success");
+      console.log(data);
+
+      toast.success("Article update scuccess");
       setArticleTitle(data.title);
       setArticleState(data.published);
     },
@@ -76,6 +105,25 @@ function NewArticlePage() {
   const publishArticleState = () => {
     articleUpdateMutation.mutate({ id: articleId, published: !articleState });
   };
+
+  if (articleQuery.isLoading)
+    return (
+      <div className="w-full flex justify-center items-center flex-col">
+        <LoadingComp />
+      </div>
+    );
+
+  if (articleQuery.isError)
+    return (
+      <div className="w-full flex justify-center items-center flex-col min-h-[500px] gap-y-5">
+        <h1 className="text-2xl text-gray-500 font-bold">Article not found</h1>
+        <Link href={"/manage"}>
+          {" "}
+          <button className="genbtn">Back to home</button>
+        </Link>{" "}
+      </div>
+    );
+
   return (
     <>
       <div className="w-full">
@@ -140,7 +188,7 @@ function NewArticlePage() {
                 <Image
                   fill
                   alt="Title image"
-                  src={titleImg ?? "/noimg.png"}
+                  src={titleImg ? titleImg : "/noimg.png"}
                   className="object-cover "
                 />
               </div>
@@ -191,7 +239,7 @@ function NewArticlePage() {
                 toolbar:
                   "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
               }}
-              initialValue="<h1>Hello World</h1>"
+              initialValue={content}
             />
             <button
               className="genbtn my-2"
@@ -292,4 +340,4 @@ function NewArticlePage() {
     </>
   );
 }
-export default NewArticlePage;
+export default ManageArticlePage;

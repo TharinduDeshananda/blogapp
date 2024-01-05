@@ -38,7 +38,7 @@ function ManageArticleItem(props: ArticleDataType) {
           </div>
           <div className="text-xs text-gray-500">2023-12-05</div>
           <div className="flex flex-1 flex-row gap-x-5 items-center">
-            <Link href={"/"}>
+            <Link href={"/manage/manage-article/" + props.id}>
               <button className="genbtn">View</button>
             </Link>
             <button

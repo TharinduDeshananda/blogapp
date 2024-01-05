@@ -65,11 +65,15 @@ function ManagePage() {
       <div className="flex flex-col gap-y-5">
         {searchQuery.isSuccess &&
           searchQuery.data.map(
-            (i: { title: string; titleImage: string }, index: number) => (
+            (
+              i: { title: string; titleImage: string; _id: string },
+              index: number
+            ) => (
               <ManageArticleItem
                 key={index}
                 title={i.title}
                 imageUrl={i.titleImage}
+                id={i._id}
               />
             )
           )}
