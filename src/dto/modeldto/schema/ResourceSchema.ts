@@ -1,11 +1,14 @@
 import mongoose, { Schema, mongo } from "mongoose";
 import ResourceModelDto from "../ResourceModelDto";
 
-const resourceSchema = new Schema<ResourceModelDto>({
-  name: { type: String, required: true },
-  size: { type: Number, required: true },
-  type: { type: String, required: true },
-});
+const resourceSchema = new Schema<ResourceModelDto>(
+  {
+    name: { type: String, required: true },
+    size: { type: Number, required: true },
+    type: { type: String, required: true },
+  },
+  { timestamps: true }
+);
 
 export default function getResourceModel() {
   return (

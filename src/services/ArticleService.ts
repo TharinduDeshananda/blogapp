@@ -68,8 +68,7 @@ export async function getArticle(filter: ArticleFilterType) {
     pipeline.push({ $skip: size * page });
     pipeline.push({ $limit: size });
 
-    const filteredArticles: ArticleModelDto[] =
-      await db.ArticleEntity.aggregate(pipeline);
+    const filteredArticles = await db.ArticleEntity.aggregate(pipeline);
 
     console.log("method getArticle success");
     return filteredArticles;
@@ -209,13 +208,31 @@ export async function getOwnArticle(id: string) {
       id
     ).populate("author")) as ArticleModelDto | null;
     if (!article) throw new Error("Article not found");
+    console.log(article);
     const authorEmail = article.author?.email;
     if (user.email !== authorEmail) throw new Error("User not the author");
-
-    return article;
     console.log("method getOwnArticle success");
+    return article;
   } catch (error) {
     console.log("methods getOwnArticle Failed: ", error);
+    throw error;
+  }
+}
+
+export async function getSingleArticle(id: string) {
+  try {
+    console.log("method getSingleArticle started");
+
+    const article = await db.ArticleEntity.findById(id)
+      .populate("author")
+      .exec();
+
+    if (!article) throw new Error("Article not found");
+
+    console.log("method getSingleArticle success");
+    return article;
+  } catch (error) {
+    console.log("methods getSingleArticle Failed: ", error);
     throw error;
   }
 }

@@ -30,12 +30,12 @@ function ManageArticleItem(props: ArticleDataType) {
           <h1 className="font-bold text-lg text-gray-500">
             {props.title ?? "No Title Available"}
           </h1>
-          <div className="text-justify line-clamp-2 text-sm font-bold text-gray-500">
+          {/* <div className="text-justify line-clamp-2 text-sm font-bold text-gray-500">
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Mollitia
             veritatis, aperiam eveniet, tenetur exercitationem illum harum quas
             repellat enim doloribus eos sint, nesciunt nisi molestias! Impedit
             ducimus nostrum molestias animi?
-          </div>
+          </div> */}
           <div className="text-xs text-gray-500">2023-12-05</div>
           <div className="flex flex-1 flex-row gap-x-5 items-center">
             <Link href={"/manage/manage-article/" + props.id}>

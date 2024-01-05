@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
     const filterDto = plainToInstance(ArticleFilterType, plainObj);
 
     const data = await getArticle(filterDto);
+    console.log(data);
     return NextResponse.json(new CommonResponse(0, "Success", data));
   } catch (e) {
     console.error("Article fetch failed: " + e);

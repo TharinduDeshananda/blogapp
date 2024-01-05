@@ -11,17 +11,41 @@ function TopBar() {
   const session = useSession();
 
   return (
-    <div className="min-h-[60px] border-b flex flex-row items-center sticky left-0 top-0 bg-gray-50 z-50">
+    <div className="h-[60px] border-b flex flex-row items-center sticky left-0 top-0 overflow-hidden z-50 bg-gray-500">
       <div className="absolute left-3 md:hidden">Menu Button</div>
-      <div className="flex-[3] flex justify-center items-center">
+      <div className="flex-[3] flex justify-center items-center overflow-hidden ">
         <Link href={"/"}>Title</Link>
       </div>
-      <div className="flex-[2] hidden md:flex items-center justify-end mr-3 gap-x-3 ">
-        <Link href="/manage">Manage</Link>
-        <Link href="#">About</Link>
-        <Link href="#">About</Link>
+      <div className="flex-[2] hidden md:flex  justify-end  items-stretch h-[60px]">
+        <Link
+          href="/manage"
+          className="bg-gray-900 flex items-center hover:bg-gray-800 transition duration-300"
+        >
+          <div className="text-gray-400 hover:text-gray-300 transition duration-300 ease-in-out  text-xs genp ">
+            <span>Manage</span>
+          </div>
+        </Link>
+        <Link
+          href="/#"
+          className="bg-gray-900 flex items-center hover:bg-gray-800 transition duration-300"
+        >
+          <div className="text-gray-400 hover:text-gray-300 transition duration-300 ease-in-out  text-xs genp ">
+            <span>Favourites</span>
+          </div>
+        </Link>
+        <Link
+          href="/#"
+          className="bg-gray-900 flex items-center hover:bg-gray-800 transition duration-300"
+        >
+          <div className="text-gray-400 hover:text-gray-300 transition duration-300 ease-in-out  text-xs genp ">
+            <span>About</span>
+          </div>
+        </Link>
         {session.status === "unauthenticated" && (
-          <Link href="/login">
+          <Link
+            href="/login"
+            className="bg-gray-900 flex items-center hover:bg-gray-800 transition duration-300 genp"
+          >
             <button className="genbtn">Login</button>
           </Link>
         )}
