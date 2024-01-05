@@ -8,5 +8,8 @@ const resourceSchema = new Schema<ResourceModelDto>({
 });
 
 export default function getResourceModel() {
-  return mongoose.models.Resource || mongoose.model("Resource", resourceSchema);
+  return (
+    mongoose.models.Resource ||
+    mongoose.model<ResourceModelDto>("Resource", resourceSchema)
+  );
 }

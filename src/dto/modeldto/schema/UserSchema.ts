@@ -11,5 +11,7 @@ const userSchema = new Schema<UserModelDto>({
 });
 
 export default function getUserModel() {
-  return mongoose.models.User || mongoose.model("User", userSchema);
+  return (
+    mongoose.models.User || mongoose.model<UserModelDto>("User", userSchema)
+  );
 }

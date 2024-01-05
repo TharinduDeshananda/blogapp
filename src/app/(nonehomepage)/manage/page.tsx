@@ -4,9 +4,11 @@ import ManageArticleItem from "@/components/articleitem/ManageArticleItem";
 import LoadingComp from "@/components/loadingcomp/LoadingComp";
 import PaginationComp from "@/components/paginationcomp/PaginationComp";
 import fetchArtciles from "@/controller/article/ArticleController";
+import { String } from "aws-sdk/clients/cloudhsm";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useQuery, useIsFetching } from "react-query";
+import { toast } from "react-toastify";
 import { json } from "stream/consumers";
 
 function ManagePage() {
@@ -27,6 +29,9 @@ function ManagePage() {
       }
     },
     enabled: queryEnabled,
+    onError: (e) => {
+      toast.error("Post fetch failed");
+    },
   });
 
   return (
@@ -59,9 +64,15 @@ function ManagePage() {
       <PaginationComp currentPage={4} totalPages={20} />
       <div className="flex flex-col gap-y-5">
         {searchQuery.isSuccess &&
-          searchQuery.data.map((i: string, index: number) => (
-            <ManageArticleItem key={index + i} />
-          ))}
+          searchQuery.data.map(
+            (i: { title: string; titleImage: string }, index: number) => (
+              <ManageArticleItem
+                key={index}
+                title={i.title}
+                imageUrl={i.titleImage}
+              />
+            )
+          )}
       </div>
     </div>
   );
