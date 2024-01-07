@@ -2,7 +2,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <footer className="bg-gray-800 text-white w-full genp">
+    <footer className="bg-gray-900 text-white w-full genp">
       <div className="container mx-auto flex justify-between items-center">
         <div>
           <p className="text-lg font-bold">Your Company Name</p>

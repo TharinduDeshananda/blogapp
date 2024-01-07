@@ -33,7 +33,7 @@ async function ArticlePage({ params }: { params: { id: string } }) {
   return (
     <div className="w-full min-h-screen max-w-5xl mx-auto bg-white genp rounded-md">
       <h1 className="font-bold text-3xl text-center my-5 capitalize ">
-        {articleData.title}hjhjh
+        {articleData.title}
       </h1>
       <div className="font-bold text-xs">Article by</div>
       <AuthorBar

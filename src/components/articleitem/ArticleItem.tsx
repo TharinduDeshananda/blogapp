@@ -1,12 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import Avatar from "../avatar/Avatar";
 type ArticleDataType = {
   title?: string;
   description?: string;
   dateTime?: Date;
   id?: string;
   imageUrl?: string;
+  authorName?: string;
+  authorEmail?: string;
+  authorImgUrl?: string;
 };
 
 function ArticleItem(props: ArticleDataType) {
@@ -21,18 +25,23 @@ function ArticleItem(props: ArticleDataType) {
         />
       </div>
       <div className="sm:flex-1 flex flex-col">
-        <h1 className="font-bold text-lg text-gray-500">
+        <h1 className="font-bold text-lg text-gray-800">
           {props.title ?? "No Title Available"}
         </h1>
-        <div className="text-justify line-clamp-2 text-sm font-bold text-gray-500">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Mollitia
-          veritatis, aperiam eveniet, tenetur exercitationem illum harum quas
-          repellat enim doloribus eos sint, nesciunt nisi molestias! Impedit
-          ducimus nostrum molestias animi?
+        <div className="flex flex-row gap-x-2 border px-2 py-2 rounded-lg">
+          <Avatar imageUrl={props.authorImgUrl} />
+          <div className="flex flex-col  flex-12  ">
+            <h1 className="text-sm text-gray-500 font-bold">
+              {props.authorName}
+            </h1>
+            <h1 className="text-xs text-gray-500">{props.authorEmail}</h1>
+          </div>
         </div>
-        <div className="text-xs text-gray-500">2023-12-05</div>
+        <div className="text-xs text-gray-500">
+          created at: {props.dateTime?.toString() ?? "NA"}
+        </div>
         <div className="flex flex-1 flex-col justify-end">
-          <Link href={"/"}>
+          <Link href={`article/${props.id}`}>
             <button className="genbtn">View</button>
           </Link>
         </div>
