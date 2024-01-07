@@ -1,5 +1,6 @@
 import ArticleCard from "@/components/articleCard/ArticleCard";
 import ArticleItem from "@/components/articleitem/ArticleItem";
+import PaginationComp from "@/components/paginationcomp/PaginationComp";
 import ArticleModelDto from "@/dto/modeldto/ArticleModelDto";
 import db from "@/lib/db";
 
@@ -13,13 +14,24 @@ async function getMostRecentArticle() {
 }
 
 async function getOtherArticles(page: number, size: number) {
+  if (page < 0) page = 0;
+  if (size <= 0) size = 10;
   const result: ArticleModelDto[] | null = await db.ArticleEntity.find()
     .populate("author")
     .sort({ createdAt: -1 })
-    .skip(1 + page)
+    .skip(1 + (page - 1) * size)
     .limit(size);
 
   return result;
+}
+
+async function getTotalPages(size: number) {
+  if (size == 0) return 0;
+  const count = await db.ArticleEntity.countDocuments({});
+  if (!count) return 0;
+  const totalPages = Math.floor((count - 1) / size + 1);
+  console.log("total pages: ", totalPages);
+  return totalPages;
 }
 
 export default async function Home({
@@ -27,13 +39,13 @@ export default async function Home({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const page = parseInt((searchParams["page"] as string) ?? "0");
-  const size = parseInt((searchParams["size"] as string) ?? "0");
-
+  const page = parseInt((searchParams["page"] as string) ?? "1");
+  const size = parseInt((searchParams["size"] as string) ?? "10");
+  const totalPages = await getTotalPages(size);
   console.log(page, size);
 
   const article = await getMostRecentArticle();
-  const articles: ArticleModelDto[] | null = await getOtherArticles(0, 10);
+  const articles: ArticleModelDto[] | null = await getOtherArticles(page, size);
 
   if (!article)
     return (
@@ -58,6 +70,11 @@ export default async function Home({
       {articles && (
         <>
           <h1 className="genh">Previous articles</h1>
+          <PaginationComp
+            currentPage={page}
+            perPage={size}
+            totalPages={totalPages}
+          />
           <div className="flex w-full flex-col gap-y-10">
             {articles.map((i, index: number) => (
               <ArticleItem
