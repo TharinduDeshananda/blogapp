@@ -1,6 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 import UserModelDto from "../UserModelDto";
-import { type } from "os";
 
 const userSchema = new Schema<UserModelDto>(
   {
@@ -8,6 +7,7 @@ const userSchema = new Schema<UserModelDto>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     articles: [{ type: mongoose.Types.ObjectId, ref: "Article" }],
+    favouriteArticles: [{ type: mongoose.Types.ObjectId, ref: "Article" }],
     profileImgUrl: String,
   },
   { timestamps: true }

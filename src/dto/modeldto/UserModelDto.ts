@@ -8,5 +8,6 @@ export default class UserModelDto {
   email?: string;
   role?: UserRole;
   articles?: ArticleModelDto[];
+  favouriteArticles?: ArticleModelDto[];
   profileImgUrl?: string;
 }

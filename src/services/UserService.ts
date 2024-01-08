@@ -1,8 +1,10 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import UserModelDto from "@/dto/modeldto/UserModelDto";
 import { getUserRoleEnumFromString } from "@/enum/UserRole";
 import db from "@/lib/db";
 import { hashPassword } from "@/util/passwordUtil";
 import { Document } from "mongoose";
+import { getServerSession } from "next-auth";
 
 export async function createUser(dto: UserModelDto) {
   try {
@@ -67,4 +69,31 @@ export async function getUser(email?: string): Promise<UserModelDto> {
     throw error;
   }
 }
+
+export async function addFavouriteArticle(articleId: string) {
+  try {
+    console.log("method addFavouriteArticle start ");
+    const article = await db.ArticleEntity.findById(articleId);
+    if (!article) throw new Error("article not found");
+
+    const session = await getServerSession(authOptions);
+    if (!session) throw new Error("Need to be logged in");
+    const user = session.user;
+    if (!user) throw new Error("logged in user not found");
+
+    const result = await db.UserEntity.findOneAndUpdate(
+      {
+        email: user.email,
+        favouriteArticles: { $not: { $elemMatch: { $eq: articleId } } },
+      },
+      { $addToSet: { favouriteArticles: articleId } }
+    );
+    console.log(result);
+    console.log("method addFavouriteArticle success ");
+  } catch (error) {
+    console.log("method addFavouriteArticle failed: ", error);
+    throw error;
+  }
+}
+
 export async function filterUsers() {}

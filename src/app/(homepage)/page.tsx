@@ -85,7 +85,7 @@ export default async function Home({
                 authorName={i?.author?.userName}
                 authorEmail={i?.author?.email}
                 authorImgUrl={i.author?.profileImgUrl}
-                id={(i as any)._id}
+                id={(i as any)._id?.toString()}
               />
             ))}
           </div>

@@ -1,7 +1,11 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import Avatar from "../avatar/Avatar";
+import { useMutation } from "react-query";
+import { addArticleToFavouritesOfUser } from "@/controller/favourite/FavouriteQuery";
+import { toast } from "react-toastify";
 type ArticleDataType = {
   title?: string;
   description?: string;
@@ -14,6 +18,16 @@ type ArticleDataType = {
 };
 
 function ArticleItem(props: ArticleDataType) {
+  const favouriteMutation = useMutation({
+    mutationFn: addArticleToFavouritesOfUser,
+    onError: (e: Error) => {
+      toast.error("failed: " + e.message);
+    },
+    onSuccess: () => {
+      toast.success("Success");
+    },
+  });
+
   return (
     <div className="w-full flex flex-col shadow-md border sm:flex-row genp gap-x-3">
       <div className="relative w-full max-w-[300px] aspect-video self-center overflow-hidden rounded-md">
@@ -40,10 +54,20 @@ function ArticleItem(props: ArticleDataType) {
         <div className="text-xs text-gray-500">
           created at: {props.dateTime?.toString() ?? "NA"}
         </div>
-        <div className="flex flex-1 flex-col justify-end">
+        <div className="flex  flex-row justify-end flex-wrap gap-x-2">
           <Link href={`article/${props.id}`}>
-            <button className="genbtn">View</button>
+            <button className="genbtn text-xs">View</button>
           </Link>
+
+          <button
+            className="genbtn text-xs flex items-center gap-x-2"
+            onClick={() => favouriteMutation.mutate(props.id ?? "")}
+          >
+            Add to Favourites{" "}
+            {favouriteMutation.isLoading && (
+              <div className="w-3 h-3 rounded-full border-t border-r border-b border-white animate-spin "></div>
+            )}
+          </button>
         </div>
       </div>
     </div>

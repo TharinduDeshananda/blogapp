@@ -50,7 +50,7 @@ function TopBar() {
           </Link>
         )}
         {session.status === "authenticated" && (
-          <div className="self-center mr-2">
+          <div className="self-center mx-5">
             <ContextMenu
               onClickAway={() => {}}
               wrapperItem={
